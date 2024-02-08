@@ -1,0 +1,92 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0">
+  <channel>
+    <title>Newest Python PEPs</title>
+    <link>https://peps.python.org/peps.rss</link>
+    <description>Newest Python Enhancement Proposals (PEPs): Information on new language features and some meta-information like release procedure and schedules.</description>
+    <atom:link href="https://peps.python.org/peps.rss" rel="self"/>
+    <docs>https://cyber.harvard.edu/rss/rss.html</docs>
+    <language>en</language>
+    <lastBuildDate>Thu, 08 Feb 2024 00:42:50 GMT</lastBuildDate>
+    <item>
+      <title>PEP 727: Documentation Metadata in Typing</title>
+      <link>https://peps.python.org/pep-0727/</link>
+      <description>This document proposes a way to complement docstrings to add additional documentation to Python symbols using type annotations with Annotated (in class attributes, function and method parameters, return values, and variables).</description>
+      <author>Sebastián Ramírez (tiangolo@gmail.com)</author>
+      <guid isPermaLink="true">https://peps.python.org/pep-0727/</guid>
+      <pubDate>Mon, 28 Aug 2023 00:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>PEP 726: Module ``__setattr__`` and ``__delattr__``</title>
+      <link>https://peps.python.org/pep-0726/</link>
+      <description>This PEP proposes supporting user-defined __setattr__ and __delattr__ methods on modules to extend customization of module attribute access beyond PEP 562.</description>
+      <author>Sergey B Kirpichev (skirpichev@gmail.com)</author>
+      <guid isPermaLink="true">https://peps.python.org/pep-0726/</guid>
+      <pubDate>Thu, 24 Aug 2023 00:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>PEP 725: Specifying external dependencies in pyproject.toml</title>
+      <link>https://peps.python.org/pep-0725/</link>
+      <description>This PEP specifies how to write a project’s external, or non-PyPI, build and runtime dependencies in a pyproject.toml file for packaging-related tools to consume.</description>
+      <author>Pradyun Gedam (pradyunsg@gmail.com), Ralf Gommers (ralf.gommers@gmail.com)</author>
+      <guid isPermaLink="true">https://peps.python.org/pep-0725/</guid>
+      <pubDate>Thu, 17 Aug 2023 00:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>PEP 723: Embedding pyproject.toml in single-file scripts</title>
+      <link>https://peps.python.org/pep-0723/</link>
+      <description>This PEP specifies a metadata format that can be embedded in single-file Python scripts to assist launchers, IDEs and other external tools which may need to interact with such scripts.</description>
+      <author>Ofek Lev (ofekmeister@gmail.com)</author>
+      <guid isPermaLink="true">https://peps.python.org/pep-0723/</guid>
+      <pubDate>Fri, 04 Aug 2023 00:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>PEP 722: Dependency specification for single-file scripts</title>
+      <link>https://peps.python.org/pep-0722/</link>
+      <description>This PEP specifies a format for including 3rd-party dependencies in a single-file Python script.</description>
+      <author>Paul Moore (p.f.moore@gmail.com)</author>
+      <guid isPermaLink="true">https://peps.python.org/pep-0722/</guid>
+      <pubDate>Wed, 19 Jul 2023 00:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>PEP 721: Using tarfile.data_filter for source distribution extraction</title>
+      <link>https://peps.python.org/pep-0721/</link>
+      <description>Extracting a source distribution archive should normally use the data filter added in PEP 706. We clarify details, and specify the behaviour for tools that cannot use the filter directly.</description>
+      <author>Petr Viktorin (encukou@gmail.com)</author>
+      <guid isPermaLink="true">https://peps.python.org/pep-0721/</guid>
+      <pubDate>Wed, 12 Jul 2023 00:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>PEP 720: Cross-compiling Python packages</title>
+      <link>https://peps.python.org/pep-0720/</link>
+      <description>This PEP attempts to document the status of cross-compilation of downstream projects.</description>
+      <author>Filipe Laíns (lains@riseup.net)</author>
+      <guid isPermaLink="true">https://peps.python.org/pep-0720/</guid>
+      <pubDate>Sat, 01 Jul 2023 00:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>PEP 718: Subscriptable functions</title>
+      <link>https://peps.python.org/pep-0718/</link>
+      <description>This PEP proposes making function objects subscriptable for typing purposes. Doing so gives developers explicit control over the types produced by the type checker where bi-directional inference (which allows for the types of parameters of anonymous functions to be inferred) and other methods than specialisation are insufficient.</description>
+      <author>James Hilton-Balfe (gobot1234yt@gmail.com)</author>
+      <guid isPermaLink="true">https://peps.python.org/pep-0718/</guid>
+      <pubDate>Fri, 23 Jun 2023 00:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>PEP 715: Disabling bdist_egg distribution uploads on PyPI</title>
+      <link>https://peps.python.org/pep-0715/</link>
+      <description>This PEP recommends deprecating and then disabling new uploads of the bdist_egg distribution type on PyPI. In a parallel move, this PEP recommends deprecating and then disabling new uploads of distribution filenames that have the .egg suffix.</description>
+      <author>William Woodruff (william@yossarian.net)</author>
+      <guid isPermaLink="true">https://peps.python.org/pep-0715/</guid>
+      <pubDate>Tue, 06 Jun 2023 00:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>PEP 714: Rename dist-info-metadata in the Simple API</title>
+      <link>https://peps.python.org/pep-0714/</link>
+      <description>This PEP renames the metadata provided by PEP 658 in both HTML and JSON formats of the Simple API and provides guidelines for both clients and servers in how to handle the renaming.</description>
+      <author>Donald Stufft (donald@stufft.io)</author>
+      <guid isPermaLink="true">https://peps.python.org/pep-0714/</guid>
+      <pubDate>Tue, 06 Jun 2023 00:00:00 GMT</pubDate>
+    </item>
+  </channel>
+</rss>

@@ -1,0 +1,542 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="light dark">
+    <title>PEP 727 – Documentation Metadata in Typing | peps.python.org</title>
+    <link rel="shortcut icon" href="../_static/py.png">
+    <link rel="canonical" href="https://peps.python.org/pep-0727/">
+    <link rel="stylesheet" href="../_static/style.css" type="text/css">
+    <link rel="stylesheet" href="../_static/mq.css" type="text/css">
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" media="(prefers-color-scheme: light)" id="pyg-light">
+    <link rel="stylesheet" href="../_static/pygments_dark.css" type="text/css" media="(prefers-color-scheme: dark)" id="pyg-dark">
+    <link rel="alternate" type="application/rss+xml" title="Latest PEPs" href="https://peps.python.org/peps.rss">
+    <meta name="description" content="Python Enhancement Proposals (PEPs)">
+</head>
+<body>
+    
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-sun-half" viewBox="0 0 24 24" pointer-events="all">
+    <title>Following system colour scheme</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="9"></circle>
+      <path d="M12 3v18m0-12l4.65-4.65M12 14.3l7.37-7.37M12 19.6l8.85-8.85"></path>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24" pointer-events="all">
+    <title>Selected dark colour scheme</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z"></path>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24" pointer-events="all">
+    <title>Selected light colour scheme</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+</svg>
+    <script>
+
+        document.documentElement.dataset.colour_scheme = localStorage.getItem("colour_scheme") || "auto"
+    </script>
+    <section id="pep-page-section">
+        <header>
+            <h1>Python Enhancement Proposals</h1>
+            <ul class="breadcrumbs">
+                <li><a href="https://www.python.org/" title="The Python Programming Language">Python</a> &raquo; </li>
+                <li><a href="../pep-0000/">PEP Index</a> &raquo; </li>
+                <li>PEP 727</li>
+            </ul>
+            <button id="colour-scheme-cycler" onClick="setColourScheme(nextColourScheme())">
+                <svg aria-hidden="true" class="colour-scheme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+                <svg aria-hidden="true" class="colour-scheme-icon-when-dark"><use href="#svg-moon"></use></svg>
+                <svg aria-hidden="true" class="colour-scheme-icon-when-light"><use href="#svg-sun"></use></svg>
+                <span class="visually-hidden">Toggle light / dark / auto colour theme</span>
+            </button>
+        </header>
+        <article>
+            <section id="pep-content">
+<h1 class="page-title">PEP 727 – Documentation Metadata in Typing</h1>
+<dl class="rfc2822 field-list simple">
+<dt class="field-odd">Author<span class="colon">:</span></dt>
+<dd class="field-odd">Sebastián Ramírez &lt;tiangolo&#32;&#97;t&#32;gmail.com&gt;</dd>
+<dt class="field-even">Sponsor<span class="colon">:</span></dt>
+<dd class="field-even">Jelle Zijlstra &lt;jelle.zijlstra&#32;&#97;t&#32;gmail.com&gt;</dd>
+<dt class="field-odd">Discussions-To<span class="colon">:</span></dt>
+<dd class="field-odd"><a class="reference external" href="https://discuss.python.org/t/32566">Discourse thread</a></dd>
+<dt class="field-even">Status<span class="colon">:</span></dt>
+<dd class="field-even"><abbr title="Proposal under active discussion and revision">Draft</abbr></dd>
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><abbr title="Normative PEP with a new feature for Python, implementation change for CPython or interoperability standard for the ecosystem">Standards Track</abbr></dd>
+<dt class="field-even">Topic<span class="colon">:</span></dt>
+<dd class="field-even"><a class="reference external" href="../topic/typing/">Typing</a></dd>
+<dt class="field-odd">Created<span class="colon">:</span></dt>
+<dd class="field-odd">28-Aug-2023</dd>
+<dt class="field-even">Python-Version<span class="colon">:</span></dt>
+<dd class="field-even">3.13</dd>
+<dt class="field-odd">Post-History<span class="colon">:</span></dt>
+<dd class="field-odd"><a class="reference external" href="https://discuss.python.org/t/32566" title="Discourse thread">30-Aug-2023</a></dd>
+</dl>
+<hr class="docutils" />
+<section id="contents">
+<details><summary>Table of Contents</summary><ul class="simple">
+<li><a class="reference internal" href="#abstract">Abstract</a></li>
+<li><a class="reference internal" href="#motivation">Motivation</a></li>
+<li><a class="reference internal" href="#rationale">Rationale</a></li>
+<li><a class="reference internal" href="#specification">Specification</a><ul>
+<li><a class="reference internal" href="#examples">Examples</a></li>
+<li><a class="reference internal" href="#additional-scenarios">Additional Scenarios</a><ul>
+<li><a class="reference internal" href="#type-alias">Type Alias</a></li>
+<li><a class="reference internal" href="#annotating-type-parameters">Annotating Type Parameters</a></li>
+<li><a class="reference internal" href="#annotating-unions">Annotating Unions</a></li>
+<li><a class="reference internal" href="#nested-annotated">Nested <code class="docutils literal notranslate"><span class="pre">Annotated</span></code></a></li>
+<li><a class="reference internal" href="#duplication">Duplication</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#reference-implementation">Reference Implementation</a></li>
+<li><a class="reference internal" href="#rejected-ideas">Rejected Ideas</a><ul>
+<li><a class="reference internal" href="#standardize-current-docstrings">Standardize Current Docstrings</a></li>
+<li><a class="reference internal" href="#extra-metadata-and-decorator">Extra Metadata and Decorator</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#open-issues">Open Issues</a><ul>
+<li><a class="reference internal" href="#verbosity">Verbosity</a></li>
+<li><a class="reference internal" href="#documentation-is-not-typing">Documentation is not Typing</a></li>
+<li><a class="reference internal" href="#multiple-standards">Multiple Standards</a></li>
+<li><a class="reference internal" href="#adoption">Adoption</a></li>
+<li><a class="reference internal" href="#bike-shedding">Bike Shedding</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#copyright">Copyright</a></li>
+</ul>
+</details></section>
+<section id="abstract">
+<h2><a class="toc-backref" href="#abstract" role="doc-backlink">Abstract</a></h2>
+<p>This document proposes a way to complement docstrings to add additional documentation
+to Python symbols using type annotations with <code class="xref py py-class docutils literal notranslate"><span class="pre">Annotated</span></code>
+(in class attributes, function and method parameters, return values, and variables).</p>
+</section>
+<section id="motivation">
+<h2><a class="toc-backref" href="#motivation" role="doc-backlink">Motivation</a></h2>
+<p>The current standard method of documenting code APIs in Python is using docstrings.
+But there’s no standard way to document parameters in docstrings.</p>
+<p>There are several pseudo-standards for the format in these docstrings, and new
+pseudo-standards can appear easily: numpy, Google, Keras, reST, etc.</p>
+<p>All these formats are some specific syntax inside a string. Because of this, when
+editing those docstrings, editors can’t easily provide support for autocompletion,
+inline errors for broken syntax, etc.</p>
+<p>Editors don’t have a way to support all the possible micro languages in the docstrings
+and show nice user interfaces when developers use libraries with those different
+formats. They could even add support for some of the syntaxes, but probably not all,
+or not completely.</p>
+<p>Because the docstring is in a different place in the code than the actual parameters
+and it requires duplication of information (the parameter name) the information about
+a parameter is easily in a place in the code quite far away from the declaration of
+the actual parameter. This means it’s easy to refactor a function, remove a parameter,
+and forget to remove its docs. The same happens when adding a new parameter: it’s easy
+to forget to add the docstring for it.</p>
+<p>And because of this same duplication of information (the parameter name) editors and
+other tools would need to have complex custom logic to check or ensure the
+consistency of the parameters in the signature and in their docstring, or they
+would simply not be able to support that.</p>
+<p>Additionally, it would be difficult to robustly parse varying existing docstring
+conventions to programatically get the documentation for each individual parameter
+or variable at runtime. This would be useful, for example,
+for testing the contents of each parameter’s documentation, to ensure consistency
+across several similar functions, or to extract and expose that same parameter
+documentation in some other way (e.g. an API, a CLI, etc).</p>
+<p>Some of these previous formats tried to account for the lack of type annotations
+in older Python versions by including typing information in the docstrings,
+but now that information doesn’t need to be in docstrings as there is now an official
+<a class="pep reference internal" href="../pep-0484/" title="PEP 484 – Type Hints">syntax for type annotations</a>.</p>
+</section>
+<section id="rationale">
+<h2><a class="toc-backref" href="#rationale" role="doc-backlink">Rationale</a></h2>
+<p>This proposal intends to address these shortcomings by extending and complementing the
+information in docstrings, keeping backwards compatibility with existing docstrings,
+and doing it in a way that leverages the Python language and structure, via type
+annotations with <code class="docutils literal notranslate"><span class="pre">Annotated</span></code>, and a new function in <code class="docutils literal notranslate"><span class="pre">typing</span></code>.</p>
+<p>The reason why this would belong in the standard Python library instead of an
+external package is because although the implementation would be quite trivial,
+the actual power and benefit from it would come from being a standard, so that
+editors and other tools could implement support for it.</p>
+<p>This doesn’t deprecate current usage of docstrings, it’s transparent to common
+developers (library users), and it’s only opt-in for library authors that would
+like to adopt it.</p>
+</section>
+<section id="specification">
+<h2><a class="toc-backref" href="#specification" role="doc-backlink">Specification</a></h2>
+<p>The main proposal is to introduce a new function, <code class="docutils literal notranslate"><span class="pre">typing.doc()</span></code>,
+to be used when documenting Python objects.
+This function MUST only be used within <code class="xref py py-class docutils literal notranslate"><span class="pre">Annotated</span></code> annotations.
+The function takes a single string argument, <code class="docutils literal notranslate"><span class="pre">documentation</span></code>,
+and returns an instance of <code class="docutils literal notranslate"><span class="pre">typing.DocInfo</span></code>,
+which stores the input string unchanged.</p>
+<p>Any tool processing <code class="docutils literal notranslate"><span class="pre">typing.DocInfo</span></code> objects SHOULD interpret the string as
+a docstring, and therefore SHOULD normalize whitespace
+as if <code class="docutils literal notranslate"><span class="pre">inspect.cleandoc()</span></code> were used.</p>
+<p>The string passed to <code class="docutils literal notranslate"><span class="pre">typing.doc()</span></code> SHOULD be of the form that would be a valid docstring.
+This means that <a class="reference external" href="https://docs.python.org/3/reference/lexical_analysis.html#formatted-string-literals">f-strings</a> and string operations SHOULD NOT be used.
+As this cannot be enforced by the Python runtime,
+tools SHOULD NOT rely on this behaviour,
+and SHOULD exit with an error if such a prohibited string is encountered.</p>
+<section id="examples">
+<h3><a class="toc-backref" href="#examples" role="doc-backlink">Examples</a></h3>
+<p>Class attributes may be documented:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Annotated</span><span class="p">,</span> <span class="n">doc</span>
+
+<span class="k">class</span> <span class="nc">User</span><span class="p">:</span>
+    <span class="n">first_name</span><span class="p">:</span> <span class="n">Annotated</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">doc</span><span class="p">(</span><span class="s2">&quot;The user&#39;s first name&quot;</span><span class="p">)]</span>
+    <span class="n">last_name</span><span class="p">:</span> <span class="n">Annotated</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">doc</span><span class="p">(</span><span class="s2">&quot;The user&#39;s last name&quot;</span><span class="p">)]</span>
+
+    <span class="o">...</span>
+</pre></div>
+</div>
+<p>As can function or method parameters:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Annotated</span><span class="p">,</span> <span class="n">doc</span>
+
+<span class="k">def</span> <span class="nf">create_user</span><span class="p">(</span>
+    <span class="n">first_name</span><span class="p">:</span> <span class="n">Annotated</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">doc</span><span class="p">(</span><span class="s2">&quot;The user&#39;s first name&quot;</span><span class="p">)],</span>
+    <span class="n">last_name</span><span class="p">:</span> <span class="n">Annotated</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">doc</span><span class="p">(</span><span class="s2">&quot;The user&#39;s last name&quot;</span><span class="p">)],</span>
+    <span class="n">cursor</span><span class="p">:</span> <span class="n">DatabaseConnection</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Annotated</span><span class="p">[</span><span class="n">User</span><span class="p">,</span> <span class="n">doc</span><span class="p">(</span><span class="s2">&quot;The created user after saving in the database&quot;</span><span class="p">)]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a new user in the system.</span>
+
+<span class="sd">    It needs the database connection to be already initialized.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">pass</span>
+</pre></div>
+</div>
+</section>
+<section id="additional-scenarios">
+<h3><a class="toc-backref" href="#additional-scenarios" role="doc-backlink">Additional Scenarios</a></h3>
+<p>The main scenarios that this proposal intends to cover are described above, and
+for implementers to be conformant to this specification, they only need to support
+those scenarios described above.</p>
+<p>Here are some additional edge case scenarios with their respective considerations,
+but implementers are not required to support them.</p>
+<section id="type-alias">
+<h4><a class="toc-backref" href="#type-alias" role="doc-backlink">Type Alias</a></h4>
+<p>When creating a type alias, like:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">Username</span> <span class="o">=</span> <span class="n">Annotated</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">doc</span><span class="p">(</span><span class="s2">&quot;The name of a user in the system&quot;</span><span class="p">)]</span>
+</pre></div>
+</div>
+<p>The documentation would be considered to be carried by the parameter annotated
+with <code class="docutils literal notranslate"><span class="pre">Username</span></code>.</p>
+<p>So, in a function like:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">hi</span><span class="p">(</span><span class="n">to</span><span class="p">:</span> <span class="n">Username</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> <span class="o">...</span>
+</pre></div>
+</div>
+<p>It would be equivalent to:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">hi</span><span class="p">(</span><span class="n">to</span><span class="p">:</span> <span class="n">Annotated</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">doc</span><span class="p">(</span><span class="s2">&quot;The name of a user in the system&quot;</span><span class="p">)])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> <span class="o">...</span>
+</pre></div>
+</div>
+<p>Nevertheless, implementers would not be required to support type aliases outside
+of the final type annotation to be conformant with this specification, as it
+could require more complex dereferencing logic.</p>
+</section>
+<section id="annotating-type-parameters">
+<h4><a class="toc-backref" href="#annotating-type-parameters" role="doc-backlink">Annotating Type Parameters</a></h4>
+<p>When annotating type parameters, as in:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">hi</span><span class="p">(</span>
+    <span class="n">to</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Annotated</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">doc</span><span class="p">(</span><span class="s2">&quot;The name of a user in a list&quot;</span><span class="p">)]],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> <span class="o">...</span>
+</pre></div>
+</div>
+<p>The documentation in <code class="docutils literal notranslate"><span class="pre">doc()</span></code> would refer to what it is annotating, in this
+case, each item in the list, not the list itself.</p>
+<p>There are currently no practical use cases for documenting type parameters,
+so implementers are not required to support this scenario to be considered
+conformant, but it’s included for completeness.</p>
+</section>
+<section id="annotating-unions">
+<h4><a class="toc-backref" href="#annotating-unions" role="doc-backlink">Annotating Unions</a></h4>
+<p>If used in one of the parameters of a union, as in:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">hi</span><span class="p">(</span>
+    <span class="n">to</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Annotated</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">doc</span><span class="p">(</span><span class="s2">&quot;List of user names&quot;</span><span class="p">)],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> <span class="o">...</span>
+</pre></div>
+</div>
+<p>Again, the documentation in <code class="docutils literal notranslate"><span class="pre">doc()</span></code> would refer to what it is annotating,
+in this case, this documents the list itself, not its items.</p>
+<p>In particular, the documentation would not refer to a single string passed as a
+parameter, only to a list.</p>
+<p>There are currently no practical use cases for documenting unions, so implementers
+are not required to support this scenario to be considered conformant, but it’s
+included for completeness.</p>
+</section>
+<section id="nested-annotated">
+<h4><a class="toc-backref" href="#nested-annotated" role="doc-backlink">Nested <code class="docutils literal notranslate"><span class="pre">Annotated</span></code></a></h4>
+<p>Continuing with the same idea above, if <code class="docutils literal notranslate"><span class="pre">Annotated</span></code> was used nested and used
+multiple times in the same parameter, <code class="docutils literal notranslate"><span class="pre">doc()</span></code> would refer to the type it
+is annotating.</p>
+<p>So, in an example like:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">hi</span><span class="p">(</span>
+    <span class="n">to</span><span class="p">:</span> <span class="n">Annotated</span><span class="p">[</span>
+        <span class="n">Annotated</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">doc</span><span class="p">(</span><span class="s2">&quot;A user name&quot;</span><span class="p">)]</span>
+        <span class="o">|</span> <span class="n">Annotated</span><span class="p">[</span><span class="nb">list</span><span class="p">,</span> <span class="n">doc</span><span class="p">(</span><span class="s2">&quot;A list of user names&quot;</span><span class="p">)],</span>
+        <span class="n">doc</span><span class="p">(</span><span class="s2">&quot;Who to say hi to&quot;</span><span class="p">),</span>
+    <span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> <span class="o">...</span>
+</pre></div>
+</div>
+<p>The documentation for the whole parameter <code class="docutils literal notranslate"><span class="pre">to</span></code> would be considered to be
+“<code class="docutils literal notranslate"><span class="pre">Who</span> <span class="pre">to</span> <span class="pre">say</span> <span class="pre">hi</span> <span class="pre">to</span></code>”.</p>
+<p>The documentation for the case where that parameter <code class="docutils literal notranslate"><span class="pre">to</span></code> is specifically a <code class="docutils literal notranslate"><span class="pre">str</span></code>
+would be considered to be “<code class="docutils literal notranslate"><span class="pre">A</span> <span class="pre">user</span> <span class="pre">name</span></code>”.</p>
+<p>The documentation for the case where that parameter <code class="docutils literal notranslate"><span class="pre">to</span></code> is specifically a
+<code class="docutils literal notranslate"><span class="pre">list</span></code> would be considered to be “<code class="docutils literal notranslate"><span class="pre">A</span> <span class="pre">list</span> <span class="pre">of</span> <span class="pre">user</span> <span class="pre">names</span></code>”.</p>
+<p>Implementers would only be required to support the top level use case, where the
+documentation for <code class="docutils literal notranslate"><span class="pre">to</span></code> is considered to be “<code class="docutils literal notranslate"><span class="pre">Who</span> <span class="pre">to</span> <span class="pre">say</span> <span class="pre">hi</span> <span class="pre">to</span></code>”.
+They could optionally support having conditional documentation for when the type
+of the parameter passed is of one type or another, but they are not required to do so.</p>
+</section>
+<section id="duplication">
+<h4><a class="toc-backref" href="#duplication" role="doc-backlink">Duplication</a></h4>
+<p>If <code class="docutils literal notranslate"><span class="pre">doc()</span></code> is used multiple times in a single <code class="docutils literal notranslate"><span class="pre">Annotated</span></code>, it would be
+considered invalid usage from the developer, for example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">hi</span><span class="p">(</span>
+    <span class="n">to</span><span class="p">:</span> <span class="n">Annotated</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">doc</span><span class="p">(</span><span class="s2">&quot;A user name&quot;</span><span class="p">),</span> <span class="n">doc</span><span class="p">(</span><span class="s2">&quot;The current user name&quot;</span><span class="p">)],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> <span class="o">...</span>
+</pre></div>
+</div>
+<p>Implementers can consider this invalid and are not required to support this to be
+considered conformant.</p>
+<p>Nevertheless, as it might be difficult to enforce it on developers, implementers
+can opt to support one of the <code class="docutils literal notranslate"><span class="pre">doc()</span></code> declarations.</p>
+<p>In that case, the suggestion would be to support the last one, just because
+this would support overriding, for example, in:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">User</span> <span class="o">=</span> <span class="n">Annotated</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">doc</span><span class="p">(</span><span class="s2">&quot;A user name&quot;</span><span class="p">)]</span>
+
+<span class="n">CurrentUser</span> <span class="o">=</span> <span class="n">Annotated</span><span class="p">[</span><span class="n">User</span><span class="p">,</span> <span class="n">doc</span><span class="p">(</span><span class="s2">&quot;The current user name&quot;</span><span class="p">)]</span>
+</pre></div>
+</div>
+<p>Internally, in Python, <code class="docutils literal notranslate"><span class="pre">CurrentUser</span></code> here is equivalent to:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">CurrentUser</span> <span class="o">=</span> <span class="n">Annotated</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span>
+                        <span class="n">doc</span><span class="p">(</span><span class="s2">&quot;A user name&quot;</span><span class="p">),</span>
+                        <span class="n">doc</span><span class="p">(</span><span class="s2">&quot;The current user name&quot;</span><span class="p">)]</span>
+</pre></div>
+</div>
+<p>For an implementation that supports the last <code class="docutils literal notranslate"><span class="pre">doc()</span></code> appearance, the above
+example would be equivalent to:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">hi</span><span class="p">(</span><span class="n">to</span><span class="p">:</span> <span class="n">Annotated</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">doc</span><span class="p">(</span><span class="s2">&quot;The current user name&quot;</span><span class="p">)])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> <span class="o">...</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+<section id="reference-implementation">
+<h2><a class="toc-backref" href="#reference-implementation" role="doc-backlink">Reference Implementation</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">typing.doc</span></code> and <code class="docutils literal notranslate"><span class="pre">typing.DocInfo</span></code> are implemented as follows:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">doc</span><span class="p">(</span><span class="n">documentation</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">/</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DocInfo</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">DocInfo</span><span class="p">(</span><span class="n">documentation</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">DocInfo</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">documentation</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">/</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">documentation</span> <span class="o">=</span> <span class="n">documentation</span>
+</pre></div>
+</div>
+<p>These have been implemented in the <a class="reference external" href="https://pypi.org/project/typing-extensions/">typing_extensions</a> package.</p>
+</section>
+<section id="rejected-ideas">
+<h2><a class="toc-backref" href="#rejected-ideas" role="doc-backlink">Rejected Ideas</a></h2>
+<section id="standardize-current-docstrings">
+<h3><a class="toc-backref" href="#standardize-current-docstrings" role="doc-backlink">Standardize Current Docstrings</a></h3>
+<p>A possible alternative would be to support and try to push as a standard one of the
+existing docstring formats. But that would only solve the standardization.</p>
+<p>It wouldn’t solve any of the other problems, like getting editor support
+(syntax checks) for library authors, the distance and duplication of information
+between a parameter definition and its documentation in the docstring, etc.</p>
+</section>
+<section id="extra-metadata-and-decorator">
+<h3><a class="toc-backref" href="#extra-metadata-and-decorator" role="doc-backlink">Extra Metadata and Decorator</a></h3>
+<p>An earlier version of this proposal included several parameters to indicate whether
+an object is discouraged from use, what exceptions it may raise, etc.
+To allow also deprecating functions and classes, it was also expected
+that <code class="docutils literal notranslate"><span class="pre">doc()</span></code> could be used as a decorator. But this functionality is covered
+by <code class="docutils literal notranslate"><span class="pre">typing.deprecated()</span></code> in <a class="pep reference internal" href="../pep-0702/" title="PEP 702 – Marking deprecations using the type system">PEP 702</a>, so it was dropped from this proposal.</p>
+<p>A way to declare additional information could still be useful in the future,
+but taking early feedback on this document, all that was postponed to future
+proposals.</p>
+<p>This also shifts the focus from an all-encompassing function <code class="docutils literal notranslate"><span class="pre">doc()</span></code>
+with multiple parameters to multiple composable functions, having <code class="docutils literal notranslate"><span class="pre">doc()</span></code>
+handle one single use case: additional documentation in <code class="docutils literal notranslate"><span class="pre">Annotated</span></code>.</p>
+<p>This design change also allows better interoperability with other proposals
+like <code class="docutils literal notranslate"><span class="pre">typing.deprecated()</span></code>, as in the future it could be considered to
+allow having <code class="docutils literal notranslate"><span class="pre">typing.deprecated()</span></code> also in <code class="docutils literal notranslate"><span class="pre">Annotated</span></code> to deprecate
+individual parameters, coexisting with <code class="docutils literal notranslate"><span class="pre">doc()</span></code>.</p>
+</section>
+</section>
+<section id="open-issues">
+<h2><a class="toc-backref" href="#open-issues" role="doc-backlink">Open Issues</a></h2>
+<section id="verbosity">
+<h3><a class="toc-backref" href="#verbosity" role="doc-backlink">Verbosity</a></h3>
+<p>The main argument against this would be the increased verbosity.</p>
+<p>Nevertheless, this verbosity would not affect end users as they would not see the
+internal code using <code class="docutils literal notranslate"><span class="pre">typing.doc()</span></code>.</p>
+<p>And the cost of dealing with the additional verbosity would only be carried
+by those library maintainers that decide to opt-in into this feature.</p>
+<p>Any authors that decide not to adopt it, are free to continue using docstrings
+with any particular format they decide, no docstrings at all, etc.</p>
+<p>This argument could be analogous to the argument against type annotations
+in general, as they do indeed increase verbosity, in exchange for their
+features. But again, as with type annotations, this would be optional and only
+to be used by those that are willing to take the extra verbosity in exchange
+for the benefits.</p>
+</section>
+<section id="documentation-is-not-typing">
+<h3><a class="toc-backref" href="#documentation-is-not-typing" role="doc-backlink">Documentation is not Typing</a></h3>
+<p>It could also be argued that documentation is not really part of typing, or that
+it should live in a different module. Or that this information should not be part
+of the signature but live in another place (like the docstring).</p>
+<p>Nevertheless, type annotations in Python could already be considered, by default,
+mainly documentation: they carry additional information about variables,
+parameters, return types, and by default they don’t have any runtime behavior.</p>
+<p>It could be argued that this proposal extends the type of information that
+type annotations carry, the same way as <a class="pep reference internal" href="../pep-0702/" title="PEP 702 – Marking deprecations using the type system">PEP 702</a> extends them to include
+deprecation information.</p>
+<p>And as described above, including this in <code class="docutils literal notranslate"><span class="pre">typing_extensions</span></code> to support older
+versions of Python would have a very simple and practical benefit.</p>
+</section>
+<section id="multiple-standards">
+<h3><a class="toc-backref" href="#multiple-standards" role="doc-backlink">Multiple Standards</a></h3>
+<p>Another argument against this would be that it would create another standard,
+and that there are already several pseudo-standards for docstrings. It could
+seem better to formalize one of the currently existing standards.</p>
+<p>Nevertheless, as stated above, none of those standards cover the general
+drawbacks of a doctsring-based approach that this proposal solves naturally.</p>
+<p>None of the editors have full docstring editing support (even when they have
+rendering support). Again, this is solved by this proposal just by using
+standard Python syntax and structures instead of a docstring microsyntax.</p>
+<p>The effort required to implement support for this proposal by tools would
+be minimal compared to that required for alternative docstring-based
+pseudo-standards, as for this proposal, editors would only need to
+access an already existing value in their ASTs, instead of writing a parser
+for a new string microsyntax.</p>
+<p>In the same way, it can be seen that, in many cases, a new standard that
+takes advantage of new features and solves several problems from previous
+methods can be worth having. As is the case with the new <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code>,
+<code class="docutils literal notranslate"><span class="pre">dataclass_transform</span></code>, the new typing pipe/union (<code class="docutils literal notranslate"><span class="pre">|</span></code>) operator, and other cases.</p>
+</section>
+<section id="adoption">
+<h3><a class="toc-backref" href="#adoption" role="doc-backlink">Adoption</a></h3>
+<p>As this is a new standard proposal, it would only make sense if it had
+interest from the community.</p>
+<p>Fortunately there’s already interest from several mainstream libraries
+from several developers and teams, including FastAPI, Typer, SQLModel,
+Asyncer (from the author of this proposal), Pydantic, Strawberry, and others,
+from other teams.</p>
+<p>There’s also interest and support from documentation tools, like
+<a class="reference external" href="https://github.com/mkdocstrings/mkdocstrings">mkdocstrings</a>, which added
+support even for an earlier version of this proposal.</p>
+<p>All the CPython core developers contacted for early feedback (at least 4) have
+shown interest and support for this proposal.</p>
+<p>Editor developers (VS Code and PyCharm) have shown some interest, while showing
+concerns about the verbosity of the proposal, although not about the
+implementation (which is what would affect them the most). And they have shown
+they would consider adding support for this if it were to become an
+official standard. In that case, they would only need to add support for
+rendering, as support for editing, which is normally non-existing for
+other standards, is already there, as they already support editing standard
+Python syntax.</p>
+</section>
+<section id="bike-shedding">
+<h3><a class="toc-backref" href="#bike-shedding" role="doc-backlink">Bike Shedding</a></h3>
+<p>I think <code class="docutils literal notranslate"><span class="pre">doc()</span></code> is a good name for the main function. But it might make sense
+to consider changing the names for the other parts.</p>
+<p>The returned class containing info currently named <code class="docutils literal notranslate"><span class="pre">DocInfo</span></code> could instead
+be named just <code class="docutils literal notranslate"><span class="pre">Doc</span></code>. Although it could make verbal conversations more
+confusing as it’s the same word as the name of the function.</p>
+<p>The parameter received by <code class="docutils literal notranslate"><span class="pre">doc()</span></code> currently named <code class="docutils literal notranslate"><span class="pre">documentation</span></code> could
+instead be named also <code class="docutils literal notranslate"><span class="pre">doc</span></code>, but it would make it more ambiguous in
+discussions to distinguish when talking about the function and the parameter,
+although it would simplify the amount of terms, but as these terms refer to
+different things closely related, it could make sense to have different names.</p>
+<p>The parameter received by <code class="docutils literal notranslate"><span class="pre">doc()</span></code> currently named <code class="docutils literal notranslate"><span class="pre">documentation</span></code> could
+instead be named <code class="docutils literal notranslate"><span class="pre">value</span></code>, but the word “documentation” might convey
+the meaning better.</p>
+<p>The parameter received by <code class="docutils literal notranslate"><span class="pre">doc()</span></code> currently named <code class="docutils literal notranslate"><span class="pre">documentation</span></code> could be a
+position-only parameter, in which case the name wouldn’t matter much. But then
+there wouldn’t be a way to make it match with the <code class="docutils literal notranslate"><span class="pre">DocInfo</span></code> attribute.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">DocInfo</span></code> class has a single attribute <code class="docutils literal notranslate"><span class="pre">documentation</span></code>, this name matches
+the parameter passed to <code class="docutils literal notranslate"><span class="pre">doc()</span></code>. It could be named something different,
+like <code class="docutils literal notranslate"><span class="pre">doc</span></code>, but this would mean a mismatch between the <code class="docutils literal notranslate"><span class="pre">doc()</span></code> parameter
+<code class="docutils literal notranslate"><span class="pre">documentation</span></code> and the equivalent attribute <code class="docutils literal notranslate"><span class="pre">doc</span></code>, and it would mean that in
+one case (in the function), the term <code class="docutils literal notranslate"><span class="pre">doc</span></code> refers to a function, and in the
+other case (the resulting class) the term <code class="docutils literal notranslate"><span class="pre">doc</span></code> refers to a string value.</p>
+<p>This shows the logic to select the current terms, but it could all be
+discussed further.</p>
+</section>
+</section>
+<section id="copyright">
+<h2><a class="toc-backref" href="#copyright" role="doc-backlink">Copyright</a></h2>
+<p>This document is placed in the public domain or under the
+CC0-1.0-Universal license, whichever is more permissive.</p>
+</section>
+</section>
+<hr class="docutils" />
+<p>Source: <a class="reference external" href="https://github.com/python/peps/blob/main/peps/pep-0727.rst">https://github.com/python/peps/blob/main/peps/pep-0727.rst</a></p>
+<p>Last modified: <a class="reference external" href="https://github.com/python/peps/commits/main/pep-0727.rst">2023-09-09 17:39:29 GMT</a></p>
+
+        </article>
+        <nav id="pep-sidebar">
+            <h2>Contents</h2>
+            <ul>
+<li><a class="reference internal" href="#abstract">Abstract</a></li>
+<li><a class="reference internal" href="#motivation">Motivation</a></li>
+<li><a class="reference internal" href="#rationale">Rationale</a></li>
+<li><a class="reference internal" href="#specification">Specification</a><ul>
+<li><a class="reference internal" href="#examples">Examples</a></li>
+<li><a class="reference internal" href="#additional-scenarios">Additional Scenarios</a><ul>
+<li><a class="reference internal" href="#type-alias">Type Alias</a></li>
+<li><a class="reference internal" href="#annotating-type-parameters">Annotating Type Parameters</a></li>
+<li><a class="reference internal" href="#annotating-unions">Annotating Unions</a></li>
+<li><a class="reference internal" href="#nested-annotated">Nested <code class="docutils literal notranslate"><span class="pre">Annotated</span></code></a></li>
+<li><a class="reference internal" href="#duplication">Duplication</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#reference-implementation">Reference Implementation</a></li>
+<li><a class="reference internal" href="#rejected-ideas">Rejected Ideas</a><ul>
+<li><a class="reference internal" href="#standardize-current-docstrings">Standardize Current Docstrings</a></li>
+<li><a class="reference internal" href="#extra-metadata-and-decorator">Extra Metadata and Decorator</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#open-issues">Open Issues</a><ul>
+<li><a class="reference internal" href="#verbosity">Verbosity</a></li>
+<li><a class="reference internal" href="#documentation-is-not-typing">Documentation is not Typing</a></li>
+<li><a class="reference internal" href="#multiple-standards">Multiple Standards</a></li>
+<li><a class="reference internal" href="#adoption">Adoption</a></li>
+<li><a class="reference internal" href="#bike-shedding">Bike Shedding</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#copyright">Copyright</a></li>
+</ul>
+
+            <br>
+            <a id="source" href="https://github.com/python/peps/blob/main/peps/pep-0727.rst">Page Source (GitHub)</a>
+        </nav>
+    </section>
+    <script src="../_static/colour_scheme.js"></script>
+    <script src="../_static/wrap_tables.js"></script>
+    <script src="../_static/sticky_banner.js"></script>
+</body>
+</html>
