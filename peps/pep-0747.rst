@@ -200,11 +200,16 @@ that represent a type assignable to ``str | None``::
   err1: TypeForm[str | None] = str | int  # Error
   err2: TypeForm[str | None] = list[str | None]  # Error
 
-By this same definition, ``TypeForm[Any]`` describes a type form object
-that represents the type ``Any`` or any type that is assignable to ``Any``.
-Since all types in the Python type system are assignable to ``Any``,
-``TypeForm[Any]`` describes the set of all type form objects
+By this same definition, ``TypeForm[object]`` describes a type form object
+that represents the type ``object`` or any type that is assignable to ``object``.
+Since all types in the Python type system are assignable to ``object``,
+``TypeForm[object]`` describes the set of all type form objects
 evaluated from all valid type expressions.
+
+``TypeForm[Any]`` describes a ``TypeForm`` type whose type argument is not
+statically known but is a valid type form object. It is thus assignable both
+to and from any other ``TypeForm`` type (because ``Any`` is assignable both
+to and from any type).
 
 The type expression ``TypeForm``, with no type argument provided, is
 equivalent to ``TypeForm[Any]``.
@@ -289,9 +294,9 @@ This explicit syntax serves two purposes. First, it documents the developer's
 intent to use the value as a type form object. Second, static type checkers
 validate that all rules for type expressions are followed::
 
-  x4 = type(int)  # No error, evaluates to "type[int]"
+  x4 = type(1)  # No error, evaluates to "type[int]"
   
-  x5 = TypeForm(type(int))  # Error: call not allowed in type expression
+  x5 = TypeForm(type(1))  # Error: call not allowed in type expression
 
 
 Assignability
@@ -534,15 +539,50 @@ Treat ``type[T]`` as a subtype of ``TypeForm[T]``
 -------------------------------------------------
 
 It was suggested that type ``type[T]`` should be considered a subtype
-of ``TypeForm[T]``. This was ultimately rejected because there are ways to
-create an object of type ``type[T]`` that does not encode a valid type expression.
-For example, the expression ``type[1]`` is not a valid type expression. Likewise,
-the  expression ``type[S]`` is not a valid type expression if ``S`` is an
-out-of-scope type variable. This same argument applies to other special forms
-like objects of type ``UnionType``, which may or may not encode a valid type
-expression. Rather than carving out a special case for ``type[T]`` that would
-allow for potential unsoundness, it was decided to treat all type forms
-consistently. Therefore, ``type[T]`` is not considered a subtype of ``TypeForm[T]``.
+of ``TypeForm[T]``. This was ultimately rejected because there are expressions
+that a static type checker will evaluate as type ``type[T]`` that do not
+encode a valid type at runtime.
+
+A value that occupies the type ``TypeForm[T]`` should encode a valid type
+``T`` in the Python type system, and a static type checker and runtime type
+checker should agree on this interpretation. These semantics can be 
+guaranteed only if a static type checker applies all of the syntactic,
+semantic, and contextual rules described in the typing spec that
+apply to type expressions. The runtime is not as strict as a static type
+checker in enforcing these rules, so it can produce objects that are invalid
+type form objects.
+
+For example, the expression ``list[1]`` is an invalid type expression. The
+runtime evaluates this expression without raising an error and produces
+a value that is an instance of ``types.GenericAlias``, but this object does not
+describe a valid type in the Python type system. If a static type checker
+encounters the expression ``list[1]`` in a context where a type expression is
+not expected, it likewise should not generate an error. It will instead evaluate
+the type of this expression to be ``type[list[Any]]`` or something similar.
+Likewise, the expression ``set[S]`` is not a valid type expression if ``S``
+is an out-of-scope type variable, yet the runtime will not enforce the scoping
+rules for type variables and will produce an object of type ``types.GenericAlias``.
+The resulting object will not represent a valid type in the Python type
+system, and static type checkers and runtime type checkers may disagree
+on its interpretation. A static type checker will evaluate its type to be
+``type[set[S]]`` or ``type[set[Any]]``. Since a static type checker cannot
+guarantee that an expression that evaluates as type ``type[T]`` is a type form
+that encodes a valid type in the Python type system, we cannot treat
+``type[T]`` as a subtype of ``TypeForm[T]``. In many cases, a value that
+occupies ``type[T]`` will also occupy ``TypeForm[T]``, but this is not
+guaranteed statically.
+
+The type ``type[T]`` is not unique here. This same argument applies to other
+special form objects such as instances of ``UnionType`` or ``_UnionGenericAlias``,
+which may or may not encode a valid type. For example, consider the
+expression ``Union[int, 1]``. This is not a valid type expression but evaluates
+at runtime to a ``_UnionGenericAlias`` object. This object does not encode a
+valid type in the Python type system. Similarly, the expression
+``Literal[object]`` is not a valid type expression and evaluates at runtime to
+an object that does not encode a valid type in the Python type system. Rather
+than carve out a special case for ``type[T]`` that would allow for potential
+unsoundness, it was decided to treat all type forms consistently.
+Therefore, ``type[T]`` is not considered a subtype of ``TypeForm[T]``.
 
 It was also pointed out that the expression ``C | C`` (where ``C`` is a class
 object) is a valid type expression - and therefore a valid ``TypeForm``,
